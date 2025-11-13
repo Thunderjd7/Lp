@@ -1,0 +1,91 @@
+2)AGGREGATION UNIVERSITY 
+Implement aggregation and indexing with following example using MongoDB Example: In this Assignment, we are creating Student Database. Which contain the information ofstudent_name, student_rollno,status of a student. Here status is whether student is passed/failed by the university
+
+
+Step 1: Use/Create Database
+use universityDB
+
+Step 2: Create Collection and Insert Sample Data
+
+db.students.insertMany([
+  { student_name: "Alice", student_rollno: 101, status: "passed" },
+  { student_name: "Bob", student_rollno: 102, status: "failed" },
+  { student_name: "Charlie", student_rollno: 103, status: "passed" },
+  { student_name: "David", student_rollno: 104, status: "failed" },
+  { student_name: "Eva", student_rollno: 105, status: "passed" }
+])
+
+Step 3: Aggregation Queries
+
+a) Count total students
+
+db.students.aggregate([
+  { $count: "total_students" }
+])
+
+
+Output:
+
+{ "total_students": 5 }
+
+
+b) Count passed and failed students
+
+db.students.aggregate([
+  { 
+    $group: { 
+      _id: "$status", 
+      count: { $sum: 1 } 
+    } 
+  }
+])
+
+
+Output:
+
+{ "_id": "passed", "count": 3 }
+{ "_id": "failed", "count": 2 }
+
+
+
+c) List students sorted by roll number
+
+db.students.aggregate([
+  { $sort: { student_rollno: 1 } }
+])
+
+
+d) Filter students who passed
+
+db.students.aggregate([
+  { $match: { status: "passed" } }
+])
+
+
+
+Step 4: Indexing Examples
+
+a) Create an index on student_rollno
+
+db.students.createIndex({ student_rollno: 1 })
+
+
+✅ This improves queries that search or sort by roll number.
+
+b) Create a unique index on student_rollno
+
+db.students.createIndex({ student_rollno: 1 }, { unique: true })
+
+
+✅ Ensures no two students have the same roll number.
+
+c) Create an index on status
+
+db.students.createIndex({ status: 1 })
+
+
+✅ This speeds up queries filtering by status, e.g., passed/failed students.
+
+Step 5: Show Indexes
+
+db.students.getIndexes()

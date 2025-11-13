@@ -1,0 +1,69 @@
+3) TEACHER
+Implement queries using MongoDB Teacher_id Teacher_Name Dept_Name, Salary Status Pic001 Ravi IT 30000 A Pic002 Mangesh IT 20000 A Pic003 Akshay Comp 25000 N • Create Collection, Insert data into collection, Find All, find One(with condition) • Find teacher who is having salary greater than 50000 and status is A • Find teacher who is having salary greater than 50000 OR status is A • Display teacher info in ascending and descending order. • Find teacher from different departments. • Update dept_name to ETC of techer_id= Pic002 • Increment the salary of teacher by 10000 who is having Status A • Delete teacher of teacher_id=Pic001
+
+
+
+Step 1: Use/Create Database
+
+use collegeDB
+
+Step 2: Create Collection and Insert Data
+
+db.teachers.insertMany([
+  { teacher_id: "Pic001", teacher_name: "Ravi", dept_name: "IT", salary: 30000, status: "A" },
+  { teacher_id: "Pic002", teacher_name: "Mangesh", dept_name: "IT", salary: 20000, status: "A" },
+  { teacher_id: "Pic003", teacher_name: "Akshay", dept_name: "Comp", salary: 25000, status: "N" }
+])
+
+
+Step 3: Find All Documents
+db.teachers.find()
+
+
+Step 4: Find One Document with Condition
+db.teachers.findOne({ teacher_id: "Pic002" })
+
+
+Step 5: Find Teacher with Salary > 50000 AND Status = "A"
+
+db.teachers.find({ salary: { $gt: 50000 }, status: "A" })
+
+
+Step 6: Find Teacher with Salary > 50000 OR Status = "A"
+
+db.teachers.find({ $or: [ { salary: { $gt: 50000 } }, { status: "A" } ] })
+
+
+Step 7: Display Teacher Info in Ascending Order of Salary
+
+db.teachers.find().sort({ salary: 1 })
+
+a) Descending Order
+
+db.teachers.find().sort({ salary: -1 })
+
+
+Step 8: Find Teachers from Different Departments
+
+db.teachers.distinct("dept_name")
+
+
+Step 9: Update dept_name to "ETC" for teacher_id = "Pic002"
+
+db.teachers.updateOne(
+  { teacher_id: "Pic002" },
+  { $set: { dept_name: "ETC" } }
+)
+
+
+Step 10: Increment Salary by 10000 for Teachers with Status = "A"
+
+db.teachers.updateMany(
+  { status: "A" },
+  { $inc: { salary: 10000 } }
+)
+
+
+Step 11: Delete Teacher with teacher_id = "Pic001"
+
+db.teachers.deleteOne({ teacher_id: "Pic001" })

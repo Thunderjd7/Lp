@@ -1,0 +1,47 @@
+1)KING PROBLEM
+ Implement Map reduces operation using MongoDB. Problem:A king want to count the total population in his country. He can send one person to count the population. The assigned person will visit every city serially and return with the total population in the country. give quries
+
+
+use kingCountryDB
+
+
+Step 2: Create Collection and Insert Sample Data
+
+db.cities.insertMany([
+  { "_id": 1, "city": "CityA", "population": 5000 },
+  { "_id": 2, "city": "CityB", "population": 12000 },
+  { "_id": 3, "city": "CityC", "population": 8000 },
+  { "_id": 4, "city": "CityD", "population": 7000 }
+])
+
+
+Step 3: Define Map Function
+
+var mapFunction = function() {
+    emit("totalPopulation", this.population);
+};
+
+
+Step 4: Define Reduce Function
+
+var reduceFunction = function(key, values) {
+    return Array.sum(values);
+};
+
+
+Step 5: Run Map-Reduce
+
+db.cities.mapReduce(
+    mapFunction,
+    reduceFunction,
+    { out: "population_totals" }
+)
+
+
+Step 6: View Result
+db.population_totals.find()
+
+
+***Expected Output:
+
+{ "_id" : "totalPopulation", "value" : 32000 }

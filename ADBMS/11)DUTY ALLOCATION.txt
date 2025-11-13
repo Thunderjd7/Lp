@@ -1,0 +1,65 @@
+11)DUTY ALLOCATION
+Consider the following database: Duty_allocation (posting_no, emp_no, day, shift(day/night)) Insert one document at a time Insert Multiple documents using batch insert. Remove a document using $where. Update a document using $where. Upserting a document using save().
+
+
+Step 1: Create and use the database
+
+use OfficeDB
+
+
+Step 2: Create collection and insert data
+1️⃣ Insert one document at a time
+
+db.Duty_allocation.insertOne({
+  posting_no: "P01",
+  emp_no: "E101",
+  day: "Monday",
+  shift: "Day"
+})
+
+
+2️⃣ Insert multiple documents using batch insert
+
+db.Duty_allocation.insertMany([
+  { posting_no: "P02", emp_no: "E102", day: "Tuesday", shift: "Night" },
+  { posting_no: "P03", emp_no: "E103", day: "Wednesday", shift: "Day" },
+  { posting_no: "P04", emp_no: "E104", day: "Thursday", shift: "Night" },
+  { posting_no: "P05", emp_no: "E105", day: "Friday", shift: "Day" }
+])
+
+
+✅ Check inserted records:
+
+db.Duty_allocation.find().pretty()
+
+
+Step 3: Remove a document using $where
+Example: Remove the record where the shift is “Night”.
+
+db.Duty_allocation.remove({ $where: "this.shift == 'Night'" })
+
+
+Step 4: Update a document using $where
+Example: Update the shift to “Night” for employee E103.
+
+db.Duty_allocation.update(
+  { $where: "this.emp_no == 'E103'" },
+  { $set: { shift: "Night" } }
+)
+
+
+Step 5: Upserting (insert or update) a document using save()
+If a record with posting_no: "P06" exists → update it;
+otherwise → insert a new document.
+
+db.Duty_allocation.save({
+  posting_no: "P06",
+  emp_no: "E106",
+  day: "Saturday",
+  shift: "Day"
+})
+
+
+✅ Verify all records
+
+db.Duty_allocation.find().pretty()

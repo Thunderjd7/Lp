@@ -1,0 +1,67 @@
+8)MAP REDUSE COLLEGE STUDENT DATA
+Implement Map reduces operation using MongoDB. Problem: College student data(SE,TE,BE)
+
+Step 1: Create and use database
+
+use CollegeDB
+
+
+Step 2: Create collection and insert sample documents
+
+db.Student.insertMany([
+  { Name: "Ravi",   Year: "SE", Marks: 78 },
+  { Name: "Mangesh",Year: "SE", Marks: 85 },
+  { Name: "Akshay", Year: "TE", Marks: 67 },
+  { Name: "Pooja",  Year: "TE", Marks: 73 },
+  { Name: "Rohit",  Year: "BE", Marks: 82 },
+  { Name: "Sneha",  Year: "BE", Marks: 90 },
+  { Name: "Kiran",  Year: "SE", Marks: 88 },
+  { Name: "Vikas",  Year: "TE", Marks: 79 },
+  { Name: "Priya",  Year: "BE", Marks: 95 }
+])
+
+
+Step 3: Define and execute MapReduce operation
+🎯 Goal: Find average marks of students by year (SE, TE, BE)
+
+1️⃣ Define Map Function
+
+The map function emits each year as a key and the marks as value.
+
+
+var mapFunction = function() {
+  emit(this.Year, this.Marks);
+};
+
+
+2️⃣ Define Reduce Function
+
+The reduce function calculates the sum and count for each year.
+
+
+var reduceFunction = function(keyYear, valuesMarks) {
+  var total = 0;
+  for (var i = 0; i < valuesMarks.length; i++) {
+    total += valuesMarks[i];
+  }
+  return total / valuesMarks.length;  // average marks
+};
+
+
+3️⃣ Execute MapReduce
+
+db.Student.mapReduce(
+  mapFunction,
+  reduceFunction,
+  { out: "AverageMarksByYear" }
+)
+
+
+Step 4: Display the result
+
+db.AverageMarksByYear.find().pretty()
+
+✅ Expected Output
+{ "_id" : "SE", "value" : 83.66666666666667 }
+{ "_id" : "TE", "value" : 73 }
+{ "_id" : "BE", "value" : 89 }

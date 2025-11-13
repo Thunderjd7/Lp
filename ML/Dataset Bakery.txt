@@ -1,0 +1,80 @@
+Dataset: Bakery 
+This dataset comprises the list of transactions of a retail company over the period of 
+oneweek. It contains a total of 7501 transaction records where each record consists of 
+the list of items sold in one transaction. Using this record of transactions and items in 
+each transaction, find the association rules between items.  
+There is no header in the dataset and the first row contains the first transaction, so 
+mentioned header = None here while loading dataset.  
+ 
+a. Follow following steps :  
+b. Data Preprocessing  
+c. Generate the list of transactions from the dataset  
+d. Train Apriori algorithm on the dataset  
+e. Visualize the list of rules  
+F. Generated rules depend on the values of hyper parameters. By increasing the 
+minimum confidence value and find the rules accordingly
+
+
+
+
+# Step 1: Import Libraries
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+from mlxtend.preprocessing import TransactionEncoder
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Step 2: Load Dataset (no header)
+dataset = pd.read_csv('Bakery.csv', header=None)
+print(dataset.head())
+
+# Step 3: Data Preprocessing
+# Convert each row (transaction) into a list of items
+transactions = []
+for i in range(0, dataset.shape[0]):
+    transactions.append([str(dataset.values[i, j]) for j in range(0, dataset.shape[1]) if str(dataset.values[i, j]) != 'nan'])
+
+print(f"Total transactions: {len(transactions)}")
+print("Sample transaction:", transactions[0])
+
+# Step 4: Convert to One-Hot Encoded DataFrame
+te = TransactionEncoder()
+te_ary = te.fit(transactions).transform(transactions)
+df = pd.DataFrame(te_ary, columns=te.columns_)
+print(df.head())
+
+# Step 5: Apply Apriori Algorithm
+# Minimum support means frequency of occurrence in all transactions
+frequent_itemsets = apriori(df, min_support=0.01, use_colnames=True)
+frequent_itemsets.sort_values(by='support', ascending=False, inplace=True)
+
+print("\nTop Frequent Itemsets:")
+print(frequent_itemsets.head(10))
+
+# Step 6: Generate Association Rules
+rules = association_rules(frequent_itemsets, metric="lift", min_threshold=1)
+print("\nSample Rules:")
+print(rules.head())
+
+# Step 7: Visualize Top 10 Rules by Lift
+plt.figure(figsize=(10,6))
+sns.barplot(x='lift', y='consequents', data=rules.nlargest(10, 'lift'))
+plt.title('Top 10 Association Rules by Lift')
+plt.xlabel('Lift')
+plt.ylabel('Consequent Items')
+plt.show()
+
+# Step 8: Change Minimum Confidence Value
+# Try with higher confidence (e.g. 0.5)
+rules_high_conf = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.5)
+print("\nRules with Minimum Confidence = 0.5")
+print(rules_high_conf.head())
+
+# Step 9: Visualization - Support vs Confidence
+plt.figure(figsize=(7,5))
+plt.scatter(rules_high_conf['support'], rules_high_conf['confidence'], alpha=0.7)
+plt.title('Support vs Confidence (min_confidence=0.5)')
+plt.xlabel('Support')
+plt.ylabel('Confidence')
+plt.grid(True)
+plt.show()

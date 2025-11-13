@@ -1,0 +1,89 @@
+10)TABLE
+Insert one document at a time  
+Insert Multiple documents using batch insert.  
+Remove a document using $where.  
+Update a document using $where.  
+
+Student_id Student_Name Dept_Name,  Fees  Result  
+101E  Ravi  IT  30000  Pass  
+102E  Mangesh  IT  20000  Pass  
+103F  Akshay Comp  25000  Fail  
+
+Upserting a document using save(). 
+
+
+
+
+Step 1: Create and use database
+
+use CollegeDB
+
+
+Step 2: Create collection and insert data
+1️⃣ Insert one document at a time
+
+db.Student.insertOne({
+  Student_id: "101E",
+  Student_Name: "Ravi",
+  Dept_Name: "IT",
+  Fees: 30000,
+  Result: "Pass"
+})
+
+
+2️⃣ Insert multiple documents using batch insert
+
+db.Student.insertMany([
+  {
+    Student_id: "102E",
+    Student_Name: "Mangesh",
+    Dept_Name: "IT",
+    Fees: 20000,
+    Result: "Pass"
+  },
+  {
+    Student_id: "103F",
+    Student_Name: "Akshay",
+    Dept_Name: "Comp",
+    Fees: 25000,
+    Result: "Fail"
+  }
+])
+
+
+✅ Check inserted records:
+
+db.Student.find().pretty()
+
+
+Step 3: Remove a document using $where
+Example: Remove the student whose fees are less than 25000.
+
+db.Student.remove({ $where: "this.Fees < 25000" })
+
+
+Step 4: Update a document using $where
+Example: Update student’s result to "Pass" where student failed.
+
+db.Student.update(
+  { $where: "this.Result == 'Fail'" },
+  { $set: { Result: "Pass" } }
+)
+
+
+Step 5: Upserting a document using save()
+If the student with Student_id: "104E" exists → it will update;
+if not → it will insert a new record.
+
+db.Student.save({
+  Student_id: "104E",
+  Student_Name: "Pooja",
+  Dept_Name: "ENTC",
+  Fees: 28000,
+  Result: "Pass"
+})
+
+
+✅ Verify all records
+
+db.Student.find().pretty()

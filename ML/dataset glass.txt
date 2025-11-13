@@ -1,0 +1,72 @@
+Classification Technique: 
+Dataset: glass 
+The dataset is about  different types of glasses.  
+Note that, Type of glass column is your target variable. 
+• Apply Data pre-processing (Label Encoding, Data Transformation….) 
+techniques if necessary.  
+• Perform Train Test Split 
+• Use any Classification Algorithm (example Decision Tree classifier etc) to 
+classify Glass Category  
+• Model Evaluation 
+ 
+
+
+# Step 1: Import Libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Step 2: Load Dataset
+data = pd.read_csv("glass.csv")
+print(data.head())
+print(data.info())
+
+# Step 3: Data Preprocessing
+# Check for missing values
+print(data.isnull().sum())
+
+# Label Encoding if target is non-numeric (Type is usually numeric, skip if already numeric)
+# le = LabelEncoder()
+# data['Type'] = le.fit_transform(data['Type'])
+
+# Separate Features and Target
+X = data.drop("Type", axis=1)
+y = data["Type"]
+
+# Optional: Feature Scaling
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Step 4: Train-Test Split
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+
+# Step 5: Apply Classification Algorithm
+# Using Decision Tree Classifier
+clf = DecisionTreeClassifier(random_state=42)
+clf.fit(X_train, y_train)
+
+# Step 6: Make Predictions
+y_pred = clf.predict(X_test)
+
+# Step 7: Model Evaluation
+# Accuracy
+acc = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {acc:.2f}")
+
+# Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+plt.figure(figsize=(8,6))
+sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.show()
+
+# Classification Report
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+

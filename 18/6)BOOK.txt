@@ -1,0 +1,77 @@
+6)BOOK
+Execute at least 10 queries on following database that demonstrates following querying techniques: Book(Book_id,Book_Name,Author,Price,No_of_Pages) • Display all books from the collection. • Display one book using findOne • Display all books having price greater than 300 using $gt. • Display all books having price less than 300 using $lt AND No_of_pages greater than 1000 using $gt. • Display all books having price less than or equal to 300 using $le ORNo_of_pages greater than or equal to 1000 using $ge. • Use $not. • Accept a Null value in a document. • Find all books whose name starts with ‘b’ using $regex.
+
+
+Step 1: Create and use database
+
+use LibraryDB
+
+
+Step 2: Create collection and insert sample documents
+
+db.Book.insertMany([
+  { Book_id: 1, Book_Name: "Brave New World", Author: "Aldous Huxley", Price: 350, No_of_Pages: 288 },
+  { Book_id: 2, Book_Name: "Beloved", Author: "Toni Morrison", Price: 280, No_of_Pages: 324 },
+  { Book_id: 3, Book_Name: "Becoming", Author: "Michelle Obama", Price: 500, No_of_Pages: 448 },
+  { Book_id: 4, Book_Name: "Inferno", Author: "Dan Brown", Price: 250, No_of_Pages: 1050 },
+  { Book_id: 5, Book_Name: "Bible", Author: null, Price: 0, No_of_Pages: 1200 },
+  { Book_id: 6, Book_Name: "Blink", Author: "Malcolm Gladwell", Price: 320, No_of_Pages: 290 },
+  { Book_id: 7, Book_Name: "Bird Box", Author: "Josh Malerman", Price: 280, No_of_Pages: 400 },
+  { Book_id: 8, Book_Name: "Boundaries", Author: "Henry Cloud", Price: 310, No_of_Pages: 260 }
+])
+
+
+Step 3: Execute Queries
+1️⃣ Display all books from the collection
+
+db.Book.find()
+
+
+2️⃣ Display one book using findOne()
+
+db.Book.findOne()
+
+
+3️⃣ Display all books having price greater than 300 using $gt
+
+db.Book.find({ Price: { $gt: 300 } })
+
+
+4️⃣ Display all books having price less than 300 using $lt AND No_of_Pages greater than 1000 using $gt
+
+db.Book.find({ Price: { $lt: 300 }, No_of_Pages: { $gt: 1000 } })
+
+
+5️⃣ Display all books having price less than or equal to 300 using $lte OR No_of_Pages greater than or equal to 1000 using $gte
+
+db.Book.find({
+  $or: [
+    { Price: { $lte: 300 } },
+    { No_of_Pages: { $gte: 1000 } }
+  ]
+})
+
+
+6️⃣ Use $not — find books not priced greater than 300
+
+db.Book.find({ Price: { $not: { $gt: 300 } } })
+
+
+7️⃣ Accept a null value in a document — (find books where Author is null)
+
+db.Book.find({ Author: null })
+
+
+8️⃣ Find all books whose name starts with ‘b’ using $regex
+
+db.Book.find({ Book_Name: { $regex: /^b/i } })
+
+
+9️⃣ Find books where pages are not greater than 500 (using $not with $gt)
+
+db.Book.find({ No_of_Pages: { $not: { $gt: 500 } } })
+
+
+🔟 Find all books having price between 250 and 400 using $gte and $lte
+
+db.Book.find({ Price: { $gte: 250, $lte: 400 } })

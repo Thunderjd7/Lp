@@ -1,0 +1,58 @@
+5)indexing(all three)
+
+Implement aggregation and indexing(all three) with example using MongoDB
+
+
+1. Create Database and Collection
+
+use studentsDB
+
+db.students.insertMany([
+  { _id: 1, name: "Aarav", dept: "IT", fees: 30000, result: "Pass" },
+  { _id: 2, name: "Mangesh", dept: "IT", fees: 20000, result: "Pass" },
+  { _id: 3, name: "Akshay", dept: "Comp", fees: 25000, result: "Fail" },
+  { _id: 4, name: "Rohan", dept: "IT", fees: 28000, result: "Pass" },
+  { _id: 5, name: "Priya", dept: "Comp", fees: 30000, result: "Pass" }
+])
+
+2. Aggregation Framework Examples
+
+a) Group by Department and calculate total fees
+
+db.students.aggregate([
+  { $group: { _id: "$dept", totalFees: { $sum: "$fees" } } }
+])
+
+
+b) Average fees by department
+
+db.students.aggregate([
+  { $group: { _id: "$dept", avgFees: { $avg: "$fees" } } }
+])
+
+
+c) Count number of students per result
+
+db.students.aggregate([
+  { $group: { _id: "$result", count: { $sum: 1 } } }
+])
+
+3. Indexing Examples (Three Types)
+a) Single Field Index
+
+db.students.createIndex({ name: 1 })
+db.students.find({ name: "Aarav" }).explain("executionStats")
+
+b) Compound Index
+
+db.students.createIndex({ dept: 1, result: 1 })
+db.students.find({ dept: "IT", result: "Pass" }).explain("executionStats")
+
+c) Unique Index
+
+db.students.createIndex({ name: 1 }, { unique: true })
+
+4. Drop Indexes
+
+db.students.dropIndex({ name: 1 })        // Single field index
+db.students.dropIndex({ dept: 1, result: 1 }) // Compound index

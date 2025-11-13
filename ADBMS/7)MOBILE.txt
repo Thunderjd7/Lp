@@ -1,0 +1,81 @@
+7)MOBILE
+Execute at least 10 queries on any suitable MongoDB database that demonstrates following: Mobile_Specs (Mobile_Name,RAM,Price,Camera) • Find all mobiles which have 16GB RAM using $where. • Limit the display records to 5. • Sort the mobiles in ascending order in price. • Sort the mobiles in descending order of RAM. • Skip the first 5 records using cursor while displaying.
+
+
+Step 1: Create and use database
+
+use MobileDB
+
+
+Step 2: Create collection and insert sample documents
+
+db.Mobile_Specs.insertMany([
+  { Mobile_Name: "iPhone 15 Pro", RAM: 8, Price: 130000, Camera: "48MP" },
+  { Mobile_Name: "Samsung Galaxy S24", RAM: 12, Price: 115000, Camera: "200MP" },
+  { Mobile_Name: "OnePlus 12", RAM: 16, Price: 65000, Camera: "50MP" },
+  { Mobile_Name: "Xiaomi 14 Ultra", RAM: 16, Price: 70000, Camera: "200MP" },
+  { Mobile_Name: "Realme GT 6", RAM: 12, Price: 45000, Camera: "50MP" },
+  { Mobile_Name: "Google Pixel 9", RAM: 12, Price: 98000, Camera: "50MP" },
+  { Mobile_Name: "Asus ROG 8", RAM: 16, Price: 90000, Camera: "64MP" },
+  { Mobile_Name: "Vivo X100 Pro", RAM: 16, Price: 88000, Camera: "200MP" },
+  { Mobile_Name: "iQOO 12", RAM: 12, Price: 52000, Camera: "50MP" },
+  { Mobile_Name: "Nothing Phone 2", RAM: 8, Price: 40000, Camera: "50MP" },
+  { Mobile_Name: "Redmi Note 13 Pro+", RAM: 12, Price: 32000, Camera: "200MP" }
+])
+
+
+Step 3: Execute Queries
+
+1️⃣ Display all mobiles from the collection
+
+db.Mobile_Specs.find()
+
+
+2️⃣ Find all mobiles which have 16GB RAM using $where
+
+db.Mobile_Specs.find({ $where: "this.RAM == 16" })
+
+
+3️⃣ Limit the display records to 5
+
+db.Mobile_Specs.find().limit(5)
+
+
+4️⃣ Sort the mobiles in ascending order of Price
+
+db.Mobile_Specs.find().sort({ Price: 1 })
+
+
+5️⃣ Sort the mobiles in descending order of RAM
+
+db.Mobile_Specs.find().sort({ RAM: -1 })
+
+
+6️⃣ Skip the first 5 records while displaying
+
+db.Mobile_Specs.find().skip(5)
+
+
+7️⃣ Find mobiles having Price greater than 80,000 using $gt
+
+db.Mobile_Specs.find({ Price: { $gt: 80000 } })
+
+
+8️⃣ Find mobiles having Price less than 50,000 using $lt
+
+db.Mobile_Specs.find({ Price: { $lt: 50000 } })
+
+
+9️⃣ Find mobiles whose Camera is 200MP
+
+db.Mobile_Specs.find({ Camera: "200MP" })
+
+
+🔟 Find mobiles with RAM 12GB or Camera 50MP using $or
+
+db.Mobile_Specs.find({
+  $or: [
+    { RAM: 12 },
+    { Camera: "50MP" }
+  ]
+})

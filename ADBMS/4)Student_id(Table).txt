@@ -1,0 +1,58 @@
+4)Student_id(Table)
+
+Student_id Student_Name Dept_Name,  Fees Result 
+
+101E Ravi  IT  30000  Pass 
+102E Mangesh IT  20000  Pass 
+103F Akshay Comp  25000  Fail 
+
+• Insert one document at a time 
+• Insert Multiple documents using batch insert. 
+• Remove a document using $where. 
+• Update a document using $where. 
+• Upserting a document using save(). 
+
+
+
+Step 1: Use/Create Database
+
+use collegeDB
+
+Step 2: Insert One Document at a Time
+
+db.students.insertOne({ student_id: "101E", student_name: "Ravi", dept_name: "IT", fees: 30000, result: "Pass" })
+db.students.insertOne({ student_id: "102E", student_name: "Mangesh", dept_name: "IT", fees: 20000, result: "Pass" })
+db.students.insertOne({ student_id: "103F", student_name: "Akshay", dept_name: "Comp", fees: 25000, result: "Fail" })
+
+
+Step 3: Insert Multiple Documents Using Batch Insert
+
+db.students.insertMany([
+  { student_id: "104G", student_name: "David", dept_name: "Comp", fees: 28000, result: "Pass" },
+  { student_id: "105H", student_name: "Eva", dept_name: "IT", fees: 32000, result: "Pass" }
+])
+
+
+
+Step 4: Remove a Document Using $where
+
+Example: Remove student whose fees > 30000
+
+db.students.remove({ $where: "this.fees > 30000" })
+
+
+
+Step 5: Update a Document Using $where
+
+Example: Change result to "Pass" for students with dept_name = "Comp" and current result "Fail"
+
+db.students.update(
+  { $where: "this.dept_name == 'Comp' && this.result == 'Fail'" },
+  { $set: { result: "Pass" } }
+)
+
+
+
+Step 6: Upsert a Document Using save()
+
+db.students.save({ student_id: "106I", student_name: "Sam", dept_name: "IT", fees: 26000, result: "Pass" })
